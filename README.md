@@ -17,6 +17,7 @@ Dependencies
 ------------
 
 leesoh.git
+leesoh.pipenv
 
 Example Playbook
 ----------------

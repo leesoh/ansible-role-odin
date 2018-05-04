@@ -1,7 +1,7 @@
 galaxy_info:
   author: liam somerville
   description: Observe, Detect, and Investigate Networks
-  license: BSD3
+  license: BSD-3
   min_ansible_version: 1.2
   platforms:
   - name: Ubuntu
@@ -18,3 +18,4 @@ galaxy_info:
 
 dependencies:
   - leesoh.git
+  - leesoh.pipenv
