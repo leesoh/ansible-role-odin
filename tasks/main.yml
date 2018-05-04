@@ -1,0 +1,26 @@
+---
+- name: Clone ODIN from GitHub
+  become: true
+  git:
+    repo: https://github.com/chrismaddalena/ODIN.git
+    dest: "{{ odin_git_location }}/ODIN"
+    update: yes
+  register: odin
+
+- name: Install Python requirements
+  become: true
+  become_flags: -E
+  when: odin.changed
+  shell: pipenv install
+  environment:
+    PATH: "$HOME/.local/bin:{{ ansible_env.PATH }}"
+  args:
+    chdir: "{{ odin_git_location }}/ODIN"
+
+- name: Install ODIN
+  when: odin.changed
+  become: true
+  become_flags: -E
+  command: pipenv install
+  args:
+    chdir: "{{ odin_git_location }}/ODIN"
