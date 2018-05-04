@@ -1,7 +1,7 @@
 ODIN
 =========
 
-Ansible role to install ODIN on all distros.
+Ansible Galaxy role to install ODIN on all distros.
 
 Requirements
 ------------
@@ -28,7 +28,7 @@ Example Playbook
 License
 -------
 
-BSD3
+BSD-3
 
 Author Information
 ------------------
