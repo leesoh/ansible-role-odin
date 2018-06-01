@@ -25,6 +25,14 @@
     src: https://chromedriver.storage.googleapis.com/2.39/chromedriver_linux64.zip
     dest: "{{ odin_git_location }}/chromedriver"
 
+- name: Install sqlite3
+  become: true
+  when: ansible_os_family == "Debian"
+  apt:
+    name: sqlite3
+    update_cache: yes
+    state: latest
+
 - name: Install ODIN
   when: odin.changed
   become: true
