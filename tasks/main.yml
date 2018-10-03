@@ -18,12 +18,13 @@
   args:
     chdir: "{{ odin_git_location }}/ODIN"
 
-# - name: Grab chromedriver
-#   become: true
-#   unzip:
-#     remote_src: yes
-#     src: https://chromedriver.storage.googleapis.com/2.39/chromedriver_linux64.zip
-#     dest: "{{ odin_git_location }}/chromedriver"
+ - name: Grab chromedriver
+   become: true
+   when: odin.changed
+   unzip:
+     remote_src: yes
+     src: https://chromedriver.storage.googleapis.com/2.42/chromedriver_linux64.zip
+     dest: "{{ odin_git_location }}/chromedriver"
 
 - name: Install sqlite3
   become: true
