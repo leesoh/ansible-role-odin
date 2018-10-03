@@ -33,6 +33,14 @@
     update_cache: yes
     state: latest
 
+- name: Install awscli
+  become: true
+  when: ansible_os_family == "Debian" and odin.changed
+  apt:
+    name: awscli
+    update_cache: yes
+    state: latest
+
 - name: Install ODIN
   when: odin.changed
   become: true
