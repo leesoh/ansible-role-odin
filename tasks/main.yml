@@ -7,7 +7,6 @@
     update: yes
   register: odin
 
-# Currently broken in Travis: https://github.com/pypa/pipenv/issues/2078
 - name: Install Python requirements
   become: true
   become_flags: -E
@@ -18,13 +17,39 @@
   args:
     chdir: "{{ odin_git_location }}/ODIN"
 
-# name: Grab chromedriver
-# ecome: true
-# when: odin.changed
-# unarchive
-#   remote_src: yes
-#   src: https://chromedriver.storage.googleapis.com/2.42/chromedriver_linux64.zip
-#   dest: "{{ odin_git_location }}/chromedriver"
+- name: Download chromedriver
+  when: odin.changed
+  get_url:
+    url: https://chromedriver.storage.googleapis.com/2.42/chromedriver_linux64.zip
+    dest: /tmp
+
+- name: Extract chromedriver
+  become: true
+  when: odin.changed
+  unarchive:
+    remote_src: yes
+    src: /tmp/chromedriver_linux64.zip
+    dest: "{{ odin_git_location }}/chromedriver"
+
+- name: Download urlcrazy
+  get_url:
+    url: http://www.morningstarsecurity.com/downloads/urlcrazy-0.5.tar.gz
+    dest: /tmp
+
+- name: Create urlcrazy folder
+  become: true
+  when: odin.changed
+  file:
+    path: "{{ odin_git_location }}/urlcrazy"
+    state: directory
+
+- name: Extract urlcrazy
+  become: true
+  when: odin.changed
+  unarchive:
+    remote_src: yes
+    src: /tmp/urlcrazy-0.5.tar.gz
+    dest: "{{ odin_git_location }}/urlcrazy"
 
 - name: Install sqlite3
   become: true
@@ -49,3 +74,10 @@
   command: pipenv install
   args:
     chdir: "{{ odin_git_location }}/ODIN"
+
+- name: Copy ODIN config
+  when: odin_config_file
+  become: true
+  copy:
+    src: "{{ odin_config_file }}"
+    dest: "{{ odin_git_location }}/ODIN/auth/keys.config"
