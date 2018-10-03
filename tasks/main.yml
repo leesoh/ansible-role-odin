@@ -40,7 +40,7 @@
 
 - name: Download urlcrazy
   get_url:
-    url: http://www.morningstarsecurity.com/downloads/urlcrazy-0.5.tar.gz
+    url: https://www.morningstarsecurity.com/downloads/urlcrazy-0.5.tar.gz
     dest: /tmp
 
 - name: Create urlcrazy folder
