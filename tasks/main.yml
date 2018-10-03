@@ -23,6 +23,13 @@
     url: https://chromedriver.storage.googleapis.com/2.42/chromedriver_linux64.zip
     dest: /tmp
 
+- name: Create chromedriver folder
+  become: true
+  when: odin.changed
+  file:
+    path: "{{ odin_git_location }}/chromedriver"
+    state: directory
+
 - name: Extract chromedriver
   become: true
   when: odin.changed
