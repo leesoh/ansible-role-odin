@@ -1,4 +1,17 @@
 ---
+- set_fact:
+    ansible_distro: "{{ ansible_distribution|lower|replace(' ', '_')|replace('/', '-') }}"
+
+- name: Gather OS-specific variables
+  include_vars: "{{ item }}"
+  with_first_found:
+    - files:
+      - "{{ ansible_distro }}-{{ansible_distribution_version|lower|replace('/', '_') }}.yml"
+      - "{{ ansible_distro }}-{{ ansible_distribution_release }}.yml"
+      - "{{ ansible_distro }}-{{ansible_distribution_major_version|lower|replace('/', '_') }}.yml"
+      - "{{ ansible_distro }}.yml"
+      - "{{ ansible_os_family|lower }}.yml"
+
 - name: Clone ODIN from GitHub
   become: true
   git:
@@ -7,6 +20,7 @@
     update: yes
   register: odin
 
+# Currently broken-ish https://github.com/pypa/pipenv/issues/2924
 - name: Install Python requirements
   become: true
   become_flags: -E
@@ -58,20 +72,12 @@
     src: /tmp/urlcrazy-0.5.tar.gz
     dest: "{{ odin_git_location }}/urlcrazy"
 
-- name: Install sqlite3
+- name: Install required packages
   become: true
-  when: ansible_os_family == "Debian" and odin.changed
-  apt:
-    name: sqlite3
-    update_cache: yes
-    state: latest
-
-- name: Install awscli
-  become: true
-  when: ansible_os_family == "Debian" and odin.changed
-  apt:
-    name: awscli
-    update_cache: yes
+  when: odin.changed
+  with_items: "{{ odin_packages }}"
+  package:
+    name: "{{ item }}"
     state: latest
 
 - name: Install ODIN
