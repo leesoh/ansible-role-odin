@@ -1,0 +1,6 @@
+---
+odin_git_location: '/opt'
+odin_config_file: ''
+odin_packages:
+  - sqlite3
+  - awscli
